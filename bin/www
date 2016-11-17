@@ -1,0 +1,238 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var app    = require('../app');
+var debug  = require('debug')('iotapp:server');
+var http   = require('http');
+nodemailer = require("nodemailer");
+sql	   = require('mssql');
+var fs     = require('fs');
+var moment = require("moment");
+var commonConfig  = require("../commonConfig");
+
+base_url=commonConfig.impconfig.websiteURL;
+dbconfig = commonConfig.dbConfig;
+
+connectsql(dbconfig);
+
+/*dbconfig = {
+    user: 'sa',
+    password: 'softweb#123',
+    server: '122.182.14.99', // You can use 'localhost\\instance' to connect to named instance
+    database: 'smartoffice_live',
+
+    options: {
+        encrypt: true // Use this if you're on Windows Azure
+    }
+};*/
+
+/*dbconfig = {
+    user: 'softwebiot',
+    password: 'Softweb#123',
+    server: 'bv144rwe6m.database.windows.net', // You can use 'localhost\\instance' to connect to named instance
+    database: 'smartoffice',
+
+    options: {
+        encrypt: true // Use this if you're on Windows Azure
+    }
+};*/
+
+function connectsql(dbconfig)
+{
+cp  = new sql.Connection(dbconfig,function(err){
+
+	if(err){
+		console.log('SQL Connection pool failed > '+err);
+
+		//******** Write log into file when it will gives error *****/ 
+       var CurrentDate = moment().format('YYYY-MM-DD HH:mm:ss');
+            fs.appendFile('../public/images/errorconsole.txt', 'DATE:== '+CurrentDate +'|| RESPONSE:== '+ JSON.stringify(err) +'|| ERROR:== '+ new Error().stack +'||' , function (err) {
+              if (err) throw err;
+              console.log('Error Console Manage in public/images/errorconsole.txt file...');
+	            });
+               //******** Write log into file when it will gives error *****/
+
+	      // If connection is failed
+
+	      /*// create reusable transport method (opens pool of SMTP connections)
+	      var smtpTransport = nodemailer.createTransport("SMTP",{
+		  service: "mail.softwebsolutions.com",
+		  host:"mail.softwebsolutions.com",
+		  port:587,
+		  auth: {
+		      user: "tarun@softwebsolutions.com",
+		      pass: "Qm,;es9Q#H#8d^-^SC"
+		  }
+	      });
+
+	      // setup e-mail data with unicode symbols
+	      var mailOptions = {
+		  from: "tarun@softwebsolutions.com", // sender address
+		  to: 'rohan@softwebsolutions.com', // list of receivers 
+		
+		  subject: "Smartoffice - Database Connection Error", // Subject line
+		  text: JSON.stringify(err), // plaintext body
+		//  html: err // html body
+	      }
+
+	      // send mail with defined transport object
+	      smtpTransport.sendMail(mailOptions, function(error, response){
+		  if(error){
+		      console.log("Error"+error);
+		  }else{
+		      console.log("Message sent: " + response.message);
+		      
+		  }
+	      });
+
+	      connectsql(dbconfig); // recall function for re connect sql database 
+	      return false;	*/
+
+	      // create reusable transport method (opens pool of SMTP connections)
+			var smtpTransport = nodemailer.createTransport(commonConfig.impconfig.emailServer, commonConfig.emailConfig);
+
+			// setup e-mail data with unicode symbols
+			var mailOptions = {
+				from: commonConfig.impconfig.noRplyEmail,
+				to: commonConfig.impconfig.tempAdminEmail,
+				subject: commonConfig.impconfig.organizationName+" Database Connection Error", 
+				text: JSON.stringify(err)
+			}
+
+			// send mail with defined transport object
+			smtpTransport.sendMail(mailOptions, function(error, response){
+				if(error){
+				  console.log("Error"+error);
+				}else{
+				  console.log("Message sent: " + response.message);
+				}
+			});
+			return false;
+	
+	}
+	else{
+		 /**
+		 * Get port from environment and store in Express.
+		 */
+
+		var port = normalizePort(process.env.PORT || '3012');
+		app.set('port', port);
+
+		//cp.connect().then(function() {
+		 
+		 console.log('Connection pool open for duty');
+
+		   server = app.listen(port, function () {
+		   	
+		    io = require('socket.io').listen(server);
+                io.on('connection', function (socket) {
+		            socket.on('typing', function () {
+					socket.broadcast.emit('typing', {
+				    username: socket.username
+					});
+		        });
+		    
+		    });
+
+
+		  });
+
+		
+		return true;
+	
+	}	
+	
+}); //cp = connection pool
+
+
+console.log('SQL connection pool status > ....'+cp);
+
+}
+
+
+/**
+ * Create HTTP server.
+ */
+
+/*var server = http.createServer(app);
+io = require('socket.io').listen(server);
+
+io.on('connection', function (socket) {
+  
+ socket.on('typing', function () {
+    socket.broadcast.emit('typing', {
+      username: socket.username
+    });
+  });
+
+});*/
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+//server.listen(port);
+//server.on('error', onError);
+//server.on('listening', onListening);
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}

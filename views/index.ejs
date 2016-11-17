@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<title><%= title %></title>
+<link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico" />
+<link rel="stylesheet" href="css/lib/font-awesome/font-awesome.min.css">
+<link rel="stylesheet" href="css/lib/fullcalendar/fullcalendar.min.css">
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/custome.css">
+<link rel="stylesheet" href="css/calendar.css">
+
+
+
+<link rel="stylesheet" type="text/css" href="css/component.css" />
+<link href="css/grid.css" rel="stylesheet" type="text/css">
+<link href="css/loading-bar.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="css/ngDialog.css">
+<link rel="stylesheet" href="css/angular-simple-calendar.css">
+<link rel="stylesheet" href="css/sidebar.css">
+
+<link href="css/patternLock.css"  rel="stylesheet" type="text/css" />
+<link href="css/animate.css"  rel="stylesheet" type="text/css" />
+<link href="css/mr-image.css"  rel="stylesheet" type="text/css" />
+
+<link href="images/favicon.144x144.png" rel="apple-touch-icon" type="image/png" sizes="144x144">
+<link href="images/favicon.114x114.png" rel="apple-touch-icon" type="image/png" sizes="114x114">
+<link href="images/favicon.72x72.png" rel="apple-touch-icon" type="image/png" sizes="72x72">
+<link href="images/favicon.57x57.png" rel="apple-touch-icon" type="image/png">
+<link href="images/favicon.png" rel="icon" type="image/png">
+<link href="images/favicon.ico" rel="shortcut icon">
+
+<link href="css/ng-tags-input.bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="css/ng-tags-input.min.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="css/ng-table.min.css">
+<!--[if lt IE 9]><script src="js/html5.js" type="text/javascript"></script><![endif]-->
+<script src="https://cdn.socket.io/socket.io-1.3.5.js"></script>
+<script src="js/lib/angular.js"></script>
+<script src="js/lib/angular-cookies.js"></script>
+<script src="js/jquery-1.11.3.min.js"></script>
+<script src="js/patternLock.js"></script>
+<script src="js/lib/tether/tether.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/sidebar.js"></script>
+<script src="js/angular-idle.js"></script>
+<script src="js/lib/angular-ui-router.min.js"></script>
+<script src="js/lib/angular-sanitize.js"></script>
+<script src="js/lib/ngDialog.js"></script>
+<script src="js/lib/angular-base64-upload.js"></script>
+<script src="js/lib/roundProgress.min.js"></script>
+<script src="js/lib/angular-simple-calendar.js"></script>
+<!-- <script src="js/lib/fullcalendar.min.js"></script>
+<script src="js/lib/fullcalendar-init.js"></script>
+<script src="js/lib/scheduler.min.js"></script>
+<script src="js/lib/moment/min/moment.min.js"></script> -->
+<script src="js/loading-bar.js"></script>
+<script src="js/notifier.js"></script>
+<script src="js/app.js"></script>
+<script src="js/services.js"></script>
+<script src="js/controllers.js"></script>
+<script src="js/filters.js"></script>
+<script src="js/directives.js"></script>
+<script src="js/lib/mr-image.min.js"></script>
+<!-- Controllers start-->
+<script src="js/controllers/generalFuntion.js"></script>
+<script src="js/controllers/app_controller.js"></script>
+<script src="js/controllers/dashboard_controller.js"></script>
+<script src="js/controllers/report_controller.js"></script>
+<script src="js/controllers/search_controller.js"></script>
+<script src="js/controllers/people_controller.js"></script>
+<script src="js/controllers/profile_settings_controller.js"></script>
+<script src="js/controllers/conference_controller.js"></script>
+<script src="js/controllers/invite_member_controller.js"></script>
+<script src="js/controllers/schedule_meeting_controller.js"></script>
+<script src="js/controllers/company_controller.js"></script>
+<script src="js/controllers/office_controller.js"></script>
+<script src="js/controllers/space_controller.js"></script>
+<script src="js/controllers/schedule_controller.js"></script>
+<script src="js/controllers/analytics_controller.js"></script>
+<script src="js/controllers/settings_controller.js"></script>
+<script src="js/controllers/profile_controller.js"></script>
+<script src="js/controllers/app_images_controller.js"></script>
+<script src="js/controllers/logs_controller.js"></script>
+<script src="js/controllers/floormap_controller.js"></script>
+<!-- Controllers end-->
+<script src="js/ng-tags-input.min.js"></script>
+<script src="js/classie.js"></script>
+<script src="js/jquery.customSelect.js"></script>
+<!-- New added [4-5-2016] : Softweb -->
+<!-- <script src="js/lib/js.cookie.js"></script> -->
+<script src="js/lib/ui-bootstrap-tpls.js"></script>
+<script src="js/lib/datetime-picker.js"></script>
+<script src="js/lib/ng-table.min.js"></script>
+<script src="js/powerbi.js"></script>
+<!-- New added [4-5-2016] : Softweb -->
+
+<script type="text/javascript">
+$(function(){
+  //$('select.select').customSelect();
+  $('.control-panel-toggle').on('click', function() {
+    var self = $(this);
+    
+    if (self.hasClass('open')) {
+      self.removeClass('open');
+      $('.control-panel').removeClass('open');
+    } else {
+      self.addClass('open');
+      $('.control-panel').addClass('open');
+    }
+  });
+
+  $('.control-item-header .icon-toggle, .control-item-header .text').on('click', function() {
+    var content = $(this).closest('li').find('.control-item-content');
+
+    if (content.hasClass('open')) {
+      content.removeClass('open');
+    } else {
+      $('.control-item-content.open').removeClass('open');
+      content.addClass('open');
+    }
+  });
+
+/* ==========================================================================
+    Header mobile menu
+    ========================================================================== */
+
+  // Dropdowns
+  $('.site-header-collapsed .dropdown').each(function(){
+    var parent = $(this),
+      btn = parent.find('.dropdown-toggle');
+
+    btn.click(function(){
+      if (parent.hasClass('mobile-opened')) {
+        parent.removeClass('mobile-opened');
+      } else {
+        parent.addClass('mobile-opened');
+      }
+    });
+  });
+
+  $('.dropdown-more').each(function(){
+    var parent = $(this),
+      more = parent.find('.dropdown-more-caption'),
+      classOpen = 'opened';
+
+    more.click(function(){
+      if (parent.hasClass(classOpen)) {
+        parent.removeClass(classOpen);
+      } else {
+        parent.addClass(classOpen);
+      }
+    });
+  });
+
+  // Left mobile menu
+  $('.hamburger').click(function(){
+    if ($('body').hasClass('menu-left-opened')) {
+      $(this).removeClass('is-active');
+      $('body').removeClass('menu-left-opened');
+      $('html').css('overflow','auto');
+    } else {
+      $(this).addClass('is-active');
+      $('body').addClass('menu-left-opened');
+      $('html').css('overflow','hidden');
+    }
+  });
+
+  $('.mobile-menu-left-overlay').click(function(){
+    $('.hamburger').removeClass('is-active');
+    $('body').removeClass('menu-left-opened');
+    $('html').css('overflow','auto');
+  });
+
+  // Right mobile menu
+  $('.site-header .burger-right').click(function(){
+    if ($('body').hasClass('menu-right-opened')) {
+      $('body').removeClass('menu-right-opened');
+      $('html').css('overflow','auto');
+    } else {
+      $('.hamburger').removeClass('is-active');
+      $('body').removeClass('menu-left-opened');
+      $('body').addClass('menu-right-opened');
+      $('html').css('overflow','hidden');
+    }
+  });
+
+  $('.mobile-menu-right-overlay').click(function(){
+    $('body').removeClass('menu-right-opened');
+    $('html').css('overflow','auto');
+  });
+    
+  $('#tags-editor-textarea').tagEditor();
+});
+</script>
+<script src="js/script.js" type="text/javascript"></script>
+<!--[if gte IE 9]>
+  <style type="text/css">
+    .gradient {
+       filter: none;
+    }
+  </style>
+<![endif]-->
+<style type="text/css">
+  .progress-wrapper{
+      position: relative;
+      margin:20px auto;
+      font-size: 40px;
+  }
+  .progresses{
+      position: absolute;
+      width: 76%;
+      height: 100%;
+      line-height: 6em;
+      font-size:1em;
+      text-align: center;
+      color: #bbb;
+      font-weight: 100;
+  }
+  .room_detail {margin:8px;}
+</style>
+<link href="images/favicon.144x144.png" rel="apple-touch-icon" type="image/png" sizes="144x144">
+<link href="images/favicon.114x114.png" rel="apple-touch-icon" type="image/png" sizes="114x114">
+<link href="images/favicon.72x72.png" rel="apple-touch-icon" type="image/png" sizes="72x72">
+<link href="images/favicon.57x57.png" rel="apple-touch-icon" type="image/png">
+<link href="images/favicon.png" rel="icon" type="image/png">
+<link href="images/favicon.ico" rel="shortcut icon">
+
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+</head>
+
+<body class="{{ crUrl == '/conference/:id' || crUrl == '/search' || crUrl == '/analytics' || crUrl == '/settings' || crUrl == '/profile' || crUrl == '/schedule' || crUrl == '/floormap/:id/:floorid' || crUrl == '/notification'  ? 'with-side-menu control-panel control-panel-compact' : 'single_page' }}" ng-controller="AppController" >
+
+<div class="wrapper" ng-if="crUrl == '/conference/:id' || crUrl == '/search' || crUrl == '/analytics'">
+
+
+           </ul>
+              </nav>
+            </div>
+            <div class="account_nav">
+              <ul>
+        <li ng-click="showSideBarLocation()">
+          <button id="showRightPush" class="navbar-toggle" data-toggle="sidebar" data-target=".sidebar"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
+        </li>
+              </ul>
+            </div>
+          </header>
+  <header class="site-header"  ng-cloak>
+      <div class="container-fluid">
+          <a ng-if="au_email != 'kaushik.chauhan@softwebsolutions.com'" href="#/search" class="site-logo">
+
+          <div id="logo">
+              <img class="hidden-md-down" ng-src="{{ officeLogo }}" alt="">
+              </div>
+              <img class="hidden-lg-up" ng-src="{{ officeLogo }}" alt="">
+          </a>
+          <a ng-if="au_email == 'kaushik.chauhan@softwebsolutions.com'" href="#/dashboard" class="site-logo">
+
+          <div id="logo">
+              <img class="hidden-md-down" ng-src="{{ officeLogo }}" alt="">
+              </div>
+              <img class="hidden-lg-up" ng-src="{{ officeLogo }}" alt="">
+          </a>
+          <button ng-if="au_email != 'kaushik.chauhan@softwebsolutions.com'"  class="hamburger hamburger--htla" ng-show="crUrl == '/conference/:id' || crUrl == '/search' || crUrl == '/settings' ||  crUrl == '/analytics' || crUrl == '/profile' || crUrl == '/floormap/:id/:floorid' || crUrl == '/schedule' || crUrl == '/notification' ">
+              <span>toggle menu</span>
+          </button>
+          <div ng-if="au_email != 'kaushik.chauhan@softwebsolutions.com'" class="sitename">{{ officename }}</div>
+          <div ng-if="au_email == 'kaushik.chauhan@softwebsolutions.com'" class="sitename">SmartOffice</div>
+          <div class="site-header-content">
+              <div class="site-header-content-in" >
+                  <div class="site-header-shown">
+                      <div class="dropdown dropdown-notification notif">
+                          <!-- <a href="javascript:void(0);"
+                             class="header-alarm dropdown-toggle active"
+                             id="dd-notification"
+                             data-toggle="dropdown"
+                             aria-haspopup="true"
+                             aria-expanded="false">
+                              <i class="font-icon-alarm"></i>
+                          </a> -->
+                          <div class="dropdown-menu dropdown-menu-right dropdown-menu-notif" aria-labelledby="dd-notification" ng-show="crUrl != '/office' && crUrl != '/space' && crUrl != '/schedulemeeting' && crUrl != '/invite' ">
+                              <div class="dropdown-menu-notif-header">
+                                  Notifications
+                                  <span class="label label-pill label-danger">{{getNotification.length}}</span>
+                              </div>
+                              <div class="dropdown-menu-notif-list" >
+                                 <div class="dropdown-menu-notif-item" ng-repeat="getdata in getNotification| limitTo:2  ">
+                                      <div class="photo">
+                                          <img src="images/avatar-1-32.png" alt="">
+                                      </div>
+                                      <div class="dot"></div>
+                                      <a href="#">{{getdata.message}}</a> 
+                                      <div class="color-blue-grey-lighter">{{getdata.timestamp | date:'HH:mm:ss'}} hours ago</div>
+                                  </div>
+                                
+                              </div>
+                              <div class="dropdown-menu-notif-more">
+                                  <a ng-href="{{baseurl}}/index#/notification">See more</a>
+                              </div>
+                          </div>
+                      </div>
+  
+                      <div  ng-if="au_email != 'kaushik.chauhan@softwebsolutions.com'" class="dropdown dropdown-notification messages" ng-show="crUrl != '/office' && crUrl != '/space' && crUrl != '/schedulemeeting'  && crUrl != '/invite' ">
+                          <a href="#/schedule"
+                             class="header-alarm">
+                              <i class="fa fa-calendar"></i>
+                          </a>
+                         
+                      </div>
+  
+                      <div  ng-if="au_email != 'kaushik.chauhan@softwebsolutions.com'" class="dropdown dropdown-lang" ng-show="crUrl != '/office' && crUrl != '/space' && crUrl != '/schedulemeeting'  && crUrl != '/invite' ">
+                          <button class="dropdown-toggle" type="button">
+                              <span class="font-icon font-icon-question"></span>
+                          </button>
+                        
+                      </div>
+  
+                      <div class="dropdown user-menu">
+                          <button class="dropdown-toggle" id="dd-user-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <img ng-src="/images/people/{{profileAvtar}}" alt="" width="32px" height="32px">
+                          </button>
+                          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dd-user-menu">
+                              <a class="dropdown-item" ng-href="index#/profile"><span class="font-icon glyphicon glyphicon-user"  ></span>Profile</a>
+                              <a  ng-if="au_isadmin == 'true' && au_email != 'kaushik.chauhan@softwebsolutions.com'" class="dropdown-item" href="index#/settings" ng-show="crUrl != '/office' && crUrl != '/space' && crUrl != '/schedulemeeting' && crUrl != '/invite' "><span class="font-icon glyphicon glyphicon-cog"  ></span>Settings</a>
+                              <a  ng-if="au_email != 'kaushik.chauhan@softwebsolutions.com'" class="dropdown-item" href="javascript:void(0)" ng-show="crUrl != '/office' && crUrl != '/space' && crUrl != '/schedulemeeting' && crUrl != '/invite' "><span class="font-icon glyphicon glyphicon-question-sign"  ></span>Help</a>
+                              <div class="dropdown-divider" ></div>
+                              <a class="dropdown-item" href="#" oncontextmenu="return false;" ng-click="logout()"><span class="font-icon glyphicon glyphicon-log-out"></span>Logout</a>
+                          </div>
+                      </div>
+  
+                      <button ng-if="au_email != 'kaushik.chauhan@softwebsolutions.com'"  type="button" class="burger-right">
+                          <i class="font-icon-menu-addl"></i>
+                      </button>
+                  </div><!--.site-header-shown-->
+  
+                  <div class="mobile-menu-right-overlay"></div>
+                  <div class="site-header-collapsed">
+                      <div class="site-header-collapsed-in">
+
+
+                        <div class="dropdown dropdown-notification notif dropdown-typical" ng-show="crUrl != '/office' && crUrl != '/space' && crUrl != '/schedulemeeting' && crUrl != '/invite' " style="display:none">
+                          <a aria-expanded="true" aria-haspopup="true" data-toggle="dropdown" href="#" data-target="#" id="dd-notification" class="dropdown-toggle">
+                                  <!-- <span class="font-icon font-icon-alarm"></span> -->
+                                  <span class="lbl">Notifications</span>
+                                  <span class="label label-pill label-danger">4</span>
+                              </a>
+                          <div class="dropdown-menu dropdown-menu-right dropdown-menu-notif" aria-labelledby="dd-notification">
+                              
+                              <div class="dropdown-menu-notif-list">
+                                  <div class="dropdown-menu-notif-item">
+                                      <div class="photo">
+                                          <img src="images/photo-64-1.jpg" alt="">
+                                      </div>
+                                      <div class="dot"></div>
+                                      <a href="#">Morgan</a> was bothering about something
+                                      <div class="color-blue-grey-lighter">7 hours ago</div>
+                                  </div>
+                                  <div class="dropdown-menu-notif-item">
+                                      <div class="photo">
+                                          <img src="images/photo-64-2.jpg" alt="">
+                                      </div>
+                                      <div class="dot"></div>
+                                      <a href="#">Lioneli</a> had commented on this <a href="#">Super Important Thing</a>
+                                      <div class="color-blue-grey-lighter">7 hours ago</div>
+                                  </div>
+                                  <div class="dropdown-menu-notif-item">
+                                      <div class="photo">
+                                          <img src="images/photo-64-3.jpg" alt="">
+                                      </div>
+                                      <div class="dot"></div>
+                                      <a href="#">Xavier</a> had commented on the <a href="#">Movie title</a>
+                                      <div class="color-blue-grey-lighter">7 hours ago</div>
+                                  </div>
+                                  <div class="dropdown-menu-notif-item">
+                                      <div class="photo">
+                                          <img src="images/photo-64-4.jpg" alt="">
+                                      </div>
+                                      <a href="#">Lionely</a> wants to go to <a href="#">Cinema</a> with you to see <a href="#">This Movie</a>
+                                      <div class="color-blue-grey-lighter">7 hours ago</div>
+                                  </div>
+                              </div>
+                              <div class="dropdown-menu-notif-more">
+                                  <a href="#">See more</a>
+                              </div>
+                          </div>
+                         </div>
+
+                          <div ng-if="au_email != 'kaushik.chauhan@softwebsolutions.com'" class="dropdown dropdown-typical" ng-show="crUrl != '/office' && crUrl != '/space' && crUrl != '/schedulemeeting' && crUrl != '/invite' ">
+                            <a class="dropdown" href="#" >
+                              <span class="font-icon fa fa-calendar"></span>
+                              <span class="lbl">Calendar</span>
+                          </a>
+                          </div>
+
+                          <div ng-if="au_email != 'kaushik.chauhan@softwebsolutions.com'" class="dropdown dropdown-typical" ng-show="crUrl != '/office' && crUrl != '/space' && crUrl != '/schedulemeeting' && crUrl != '/invite' ">
+                            <a class="dropdown" href="#" >
+                              <span class="font-icon font-icon-question"></span>
+                              <span class="lbl">Help</span>
+                          </a>
+                          </div>  
+                                          
+
+                          <div ng-if="au_email != 'kaushik.chauhan@softwebsolutions.com'" class="dropdown" ng-show="crUrl != '/office' && crUrl != '/space' && crUrl != '/schedulemeeting' && crUrl != '/invite' ">
+                              <button class="btn btn-rounded btn-sm create-event-bt" ng-click="addEventPopup(eventpopupdate)" type="button">
+                                 Create Event
+                              </button>
+                              
+                          </div>
+                       
+                          
+                      </div><!--.site-header-collapsed-in-->
+                  </div><!--.site-header-collapsed-->
+              </div><!--site-header-content-in-->
+          </div><!--.site-header-content-->
+      </div><!--.container-fluid-->
+      <div class="account_nav" style="display:none">
+      <ul>
+        <li ng-click="showSideBarLocation()">
+            <button id="showRightPush" class="navbar-toggle" data-toggle="sidebar" data-target=".sidebar"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
+          </li>
+        </ul>
+      </div>
+  </header>
+
+  <div class="mobile-menu-left-overlay"></div>
+  <nav class="side-menu" ng-if="crUrl == '/conference/:id' || crUrl == '/search' || crUrl == '/analytics' || crUrl == '/settings' || crUrl == '/profile' || crUrl == '/schedule' || crUrl == '/floormap/:id/:floorid' || crUrl == '/notification' || crUrl == '/dashboard' || crUrl == '/report'" ng-cloak>
+      <ul class="side-menu-list" >
+          <li class="grey" ng-class="{ activeState: activeStateParam == 'search' || activeStateParam == 'conference' }">
+              <a class="lbl" ng-href="{{baseurl}}/index#/search" ng-if="au_email != 'kaushik.chauhan@softwebsolutions.com'">
+                  <i class="font-icon font-icon-search"></i>
+                  Search
+              </a>
+              
+          </li>
+          <li class="brown" ng-class="{ activeState: activeStateParam == 'schedule' }" ng-if="au_isadmin == 'true' && au_email != 'kaushik.chauhan@softwebsolutions.com'">
+            <a class="lbl" ng-href="{{baseurl}}/index#/schedule">
+                 <i class="fa fa-calendar"></i>
+                 <span class="lbl">Schedule</span>
+             </a>  
+              
+          </li>
+          <li class="purple" ng-class="{ activeState: activeStateParam == 'analytics' }" ng-if="au_isadmin == 'true' && au_email != 'kaushik.chauhan@softwebsolutions.com'">
+              <a class="lbl" ng-href="{{baseurl}}/index#/analytics" >
+                  <i class="fa fa-line-chart"></i>
+                  <span class="lbl">Analytics</span>
+              </a>
+          </li>
+          <li class="red" ng-class="{ activeState: activeStateParam == 'settings' }" ng-if="au_isadmin == 'true' && au_email != 'kaushik.chauhan@softwebsolutions.com'">
+              <a class="lbl" ng-href="{{baseurl}}/index#/settings">
+                  <span class="font-icon font-icon-cogwheel"></span>
+                  Settings
+              </a>
+          </li>
+          <!-- <li class="blue-dirty" ng-if="au_isadmin == 'true'">
+              <a  ng-href="{{baseurl}}/index#/floormap">
+                  <span class="fa fa-map"></span>
+                  <span class="lbl">Floor Map</span>
+              </a>
+          </li> -->
+
+           <li class="blue-dirty" ng-class="{ activeState: activeStateParam == 'dashboard' }" ng-if="au_isadmin == 'true' && au_email == 'kaushik.chauhan@softwebsolutions.com'">
+              <a  ng-href="{{baseurl}}/index#/dashboard">
+                  <span class="fa font-icon font-icon-dashboard" aria-hidden="true"></span>
+                  <span class="lbl">Dashboard</span>
+              </a>
+          </li>
+
+          <li class="blue-dirty" ng-class="{ activeState: activeStateParam == 'report' }" ng-if="au_isadmin == 'true' && au_email == 'kaushik.chauhan@softwebsolutions.com'">
+              <a  ng-href="{{baseurl}}/index#/report">
+                  <span class="fa font-icon font-icon-zigzag" aria-hidden="true"></span>
+                  <span class="lbl">Reports</span>
+              </a>
+          </li>
+
+      </ul>
+  
+
+  </nav><!--.side-menu-->
+  <div id="content-wrap" class="search" autoscroll="true" ui-view>     
+  </div>
+ 
+  <div ng-if="au_email != 'kaushik.chauhan@softwebsolutions.com'" class="control-panel-container" ng-show="crUrl == '/conference/:id' || crUrl == '/search' || crUrl == '/settings' ||  crUrl == '/analytics' || crUrl == '/profile' || crUrl == '/floormap/:id/:floorid' || crUrl == '/schedule' || crUrl == '/notification' ">
+      <ul>
+          <li class="sticky-note">
+              <div class="control-item-header">
+                  <a href="javaScript:void(0);" class="icon-toggle">
+                      <span class="caret-down fa fa-caret-down"></span>
+                      <span class="icon add-a-space"></span>
+                  </a> 
+                  <span class="text">Available Rooms</span>                  
+              </div>
+              <div class="control-item-content open">
+                  <div class="control-item-content-text">
+                      <ul class="sidebar-list available-spaces">
+              <li ng-model="allSpaceData" ng-repeat="location in allSpaceData" ng-if="allSpaceData.length > 0 && location.status != 1">
+              <a oncontextmenu="return false;" ui-sref="conference({id: location.id})">
+               <span class="space-name">{{location.name}}</span>
+                <span class="dot-status green"></span></a></li>
+            </ul>
+                  </div>
+              </div>
+          </li>
+          <li class="sticky-note">
+              <div class="control-item-header">
+                   <a href="javaScript:void(0);" class="icon-toggle">
+                      <span class="caret-down fa fa-caret-down"></span>
+                      <span class="icon add-a-space"></span>
+                  </a> 
+                  <span class="text">Not Available Rooms</span>                  
+              </div>
+              <div class="control-item-content">
+                  <div class="control-item-content-text" >
+                    <ul class="sidebar-list available-spaces">
+                      <li ng-model="allSpaceData" ng-repeat="location in allSpaceData" ng-if="allSpaceData.length > 0 && location.status == 1">
+                        <a oncontextmenu="return false;" ui-sref="conference({id: location.id})">
+                        <span class="space-name">{{location.name}}</span>
+                        <span class="dot-status red"></span> 
+                        </a> 
+                      </li>
+                    </ul>
+                  </div>
+              </div>
+          </li>         
+          
+      </ul>
+      <a class="control-panel-toggle">
+          <span class="fa fa-angle-double-left"></span>
+      </a>
+  </div>
+  <footer class="site-footer">
+     <div class="container-fluid">
+      <p>Copyright &copy; 2016 Softweb Solutions</p>
+     </div>
+  </footer>
+</div>
+
+  
+<script src="js/plugins.js"></script>
+
+<script src="js/lib/jquery-tag-editor/jquery.caret.min.js"></script>
+<script src="js/lib/jquery-tag-editor/jquery.tag-editor.min.js"></script>
+<script src="js/lib/bootstrap-select/bootstrap-select.min.js"></script>
+<script src="js/lib/select2/select2.full.min.js"></script>
+  
+  
+<script src="js/lib/fullcalendar/fullcalendar.min.js"></script>
+<script src="js/app_smart.js"></script>
+</body>
+
+</html>
